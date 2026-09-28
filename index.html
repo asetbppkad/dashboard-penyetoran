@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard Monitoring Setoran</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+
+<body>
+    <header class="top">
+        <div class="brand">
+            <div class="mark" aria-hidden="true">S</div>
+            <div>
+                <h1>Dashboard Monitoring Setoran</h1>
+                <p>Monitoring dan analisis data setoran</p>
+            </div>
+        </div>
+        <div class="tools">
+            <span class="upd" id="updated">Memuat data…</span>
+            <button class="btn" id="btnRefresh" title="Ambil data terbaru">Refresh Data</button>
+            <button class="btn ghost" id="btnPrint">Cetak</button>
+            <button class="btn ghost" id="btnTheme" aria-label="Ganti tema">Tema</button>
+        </div>
+    </header>
+
+    <main>
+        <section class="filters" aria-label="Filter">
+            <div class="field"><label>Bulan</label>
+                <div id="fMonth"></div>
+            </div>
+            <div class="field"><label>Tanggal</label>
+                <div id="fDate"></div>
+            </div>
+            <button class="btn ghost" id="btnReset">Reset Filter</button>
+        </section>
+
+        <div id="skeleton">
+            <div class="grid cards">
+                <div class="sk"></div>
+                <div class="sk"></div>
+                <div class="sk"></div>
+                <div class="sk"></div>
+            </div>
+            <div class="grid two">
+                <div class="sk tall"></div>
+                <div class="sk tall"></div>
+            </div>
+            <div class="sk tall"></div>
+        </div>
+
+        <div id="error" class="state" hidden>
+            <h2>Data gagal dimuat</h2>
+            <p>Periksa koneksi atau konfigurasi sumber data.</p>
+            <p class="muted" id="errMsg"></p>
+            <button class="btn" id="btnRetry">Coba Lagi</button>
+        </div>
+
+        <div id="app" hidden>
+            <section class="grid cards" aria-label="Ringkasan">
+                <article class="card kpi main"><span>Total Setoran Keseluruhan</span><strong id="kAll"></strong><small
+                        id="kAllN"></small></article>
+                <article class="card kpi"><span>Total Setoran Bulan</span><strong id="kMonth"></strong><small
+                        id="kMonthN"></small></article>
+                <article class="card kpi"><span>Total Setoran Tanggal</span><strong id="kDate"></strong><small
+                        id="kDateN"></small></article>
+                <article class="card kpi"><span>Cakupan Data Aktif</span><strong id="kTx"></strong><small
+                        id="kCov"></small></article>
+            </section>
+
+            <div id="emptyAll" class="state" hidden>
+                <h2>Tidak ada data untuk filter yang dipilih.</h2>
+            </div>
+
+            <div id="charts">
+                <section class="grid two">
+                    <article class="card">
+                        <h2>Setoran Berdasarkan Kode Rekening</h2>
+                        <div class="chartbox" id="boxAcc"><canvas id="cAcc"></canvas></div>
+                        <div class="tablewrap short">
+                            <table class="mini">
+                                <thead>
+                                    <tr>
+                                        <th>Kode Rekening</th>
+                                        <th class="r">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tAcc"></tbody>
+                            </table>
+                        </div>
+                    </article>
+                    <article class="card">
+                        <h2>Setoran Berdasarkan Kategori</h2>
+                        <div class="chartbox sq"><canvas id="cCat"></canvas></div>
+                        <div class="tablewrap short">
+                            <table class="mini">
+                                <thead>
+                                    <tr>
+                                        <th>Kategori</th>
+                                        <th class="r">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tCat"></tbody>
+                            </table>
+                        </div>
+                    </article>
+                </section>
+
+                <section class="card">
+                    <h2>Tren Setoran Per Tanggal <small class="muted" id="trendHint"></small></h2>
+                    <div class="scrollx">
+                        <div class="chartbox wide" id="boxTrend"><canvas id="cTrend"></canvas></div>
+                    </div>
+                </section>
+            </div>
+
+            <section class="card">
+                <div class="dhead">
+                    <h2>Detail Setoran</h2>
+                    <div class="dtools">
+                        <input type="search" id="q" placeholder="Cari data…" aria-label="Cari">
+                        <button class="btn ghost" id="btnCsv">Ekspor CSV</button>
+                    </div>
+                </div>
+                <div id="detailEmpty" class="empty">Silakan pilih tanggal untuk melihat rincian data.</div>
+                <div id="detailBox" hidden>
+                    <div class="tablewrap tall">
+                        <table id="tDetail">
+                            <thead></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="pager"><span id="pInfo"></span>
+                        <div><button class="btn ghost" id="pPrev">Sebelumnya</button> <button class="btn ghost"
+                                id="pNext">Berikutnya</button></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    <footer>Data bersumber dari Google Spreadsheet · Perhitungan dilakukan di peramban, tanpa permintaan ulang saat
+        filter diubah.</footer>
+    <script src="app.js"></script>
+</body>
+
+</html>
