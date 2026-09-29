@@ -108,11 +108,10 @@ const monthLabel = (k) => {
 /* ===== DATA LAYER ===== */
 function parseNominal(v) {
   if (typeof v === "number") return v;
-  let s = String(v ?? "").replace(/[^\d.,-]/g, "");
+  // Format spreadsheet sudah pasti: titik = pemisah desimal. Simbol lain (koma, spasi,
+  // Rp, dst) dibuang begitu saja, tidak ditebak-tebak sebagai pemisah ribuan.
+  const s = String(v ?? "").replace(/[^\d.-]/g, "");
   if (!s) return 0;
-  if (s.includes(",")) s = s.replace(/\./g, "").replace(",", "."); // 1.234,50
-  else if (/^-?\d{1,3}(\.\d{3})+$/.test(s) || s.split(".").length > 2)
-    s = s.replace(/\./g, ""); // 389.600
   const n = parseFloat(s);
   return isNaN(n) ? 0 : n;
 }
