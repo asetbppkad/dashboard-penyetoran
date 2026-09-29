@@ -125,6 +125,26 @@ code {
     border-color: var(--border)
 }
 
+.btn.icon {
+    padding: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0
+}
+
+.btn.icon .i-sun {
+    display: none
+}
+
+:root[data-theme=dark] .btn.icon .i-moon {
+    display: none
+}
+
+:root[data-theme=dark] .btn.icon .i-sun {
+    display: block
+}
+
 .btn:hover {
     filter: brightness(.95)
 }
@@ -510,7 +530,13 @@ footer {
     text-align: center;
     color: var(--muted);
     font-size: .78rem;
-    padding: 0 16px 24px
+    padding: 24px 16px;
+    border-top: 1px solid var(--border);
+    margin-top: 8px
+}
+
+footer p {
+    margin: 4px 0
 }
 
 [hidden] {
