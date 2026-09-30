@@ -59,13 +59,43 @@
 
     <main>
         <section class="filters" aria-label="Filter">
-            <div class="field"><label>Bulan</label>
+            <div class="field"><label>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-funnel-plus preview-icon">
+                        <path
+                            d="M13.354 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14v6a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341l1.218-1.348" />
+                        <path d="M16 6h6" />
+                        <path d="M19 3v6" />
+                    </svg>
+                    Bulan
+                </label>
                 <div id="fMonth"></div>
             </div>
-            <div class="field"><label>Tanggal</label>
+            <div class="field"><label>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-funnel-plus preview-icon">
+                        <path
+                            d="M13.354 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14v6a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341l1.218-1.348" />
+                        <path d="M16 6h6" />
+                        <path d="M19 3v6" />
+                    </svg>
+                    Tanggal
+                </label>
                 <div id="fDate"></div>
             </div>
-            <button class="btn ghost" id="btnReset">Reset Filter</button>
+            <button class="btn ghost" id="btnReset">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-funnel-x preview-icon">
+                    <path
+                        d="M12.531 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14v6a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341l.427-.473" />
+                    <path d="m16.5 3.5 5 5" />
+                    <path d="m21.5 3.5-5 5" />
+                </svg>
+                Reset Filter
+            </button>
         </section>
 
         <div id="skeleton">
@@ -93,11 +123,11 @@
             <section class="grid cards" aria-label="Ringkasan">
                 <article class="card kpi main"><span>Total Setoran Keseluruhan</span><strong id="kAll"></strong><small
                         id="kAllN"></small></article>
-                <article class="card kpi"><span>Total Setoran Bulan</span><strong id="kMonth"></strong><small
-                        id="kMonthN"></small></article>
-                <article class="card kpi"><span>Total Setoran Tanggal</span><strong id="kDate"></strong><small
-                        id="kDateN"></small></article>
-                <article class="card kpi"><span>Cakupan Data Aktif</span><strong id="kTx"></strong><small
+                <article class="card kpi kMonthCls"><span>Total Setoran
+                        Bulan</span><strong id="kMonth"></strong><small id="kMonthN"></small></article>
+                <article class="card kpi kDateCls"><span>Total Setoran
+                        Tanggal</span><strong id="kDate"></strong><small id="kDateN"></small></article>
+                <article class="card kpi kTxCls"><span>Cakupan Data Aktif</span><strong id="kTx"></strong><small
                         id="kCov"></small></article>
             </section>
 
@@ -151,7 +181,7 @@
                 <div class="dhead">
                     <h2>Detail Setoran</h2>
                     <div class="dtools">
-                        <input type="search" id="q" placeholder="Cari data…" aria-label="Cari">
+                        <input type="search" id="q" placeholder="🔍 Cari data…" aria-label="Cari">
                         <button class="btn ghost" id="btnCsv" title="Export CSV">
                             <svg class="i-csv" viewBox="0 0 24 24" width="18" height="18" fill="none"
                                 stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
