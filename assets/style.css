@@ -645,3 +645,72 @@ footer p {
 .mini td.r {
     white-space: nowrap
 }
+
+/* ===== Halaman Dokumen: card pratinjau spreadsheet ===== */
+.nav-link {
+    text-decoration: none;
+    color: var(--text);
+    font-size: .85rem;
+    padding: 8px 12px;
+    border-radius: 10px;
+}
+
+.nav-link:hover {
+    background: var(--primary-soft)
+}
+
+.nav-link.active {
+    background: var(--primary-soft);
+    color: var(--primary);
+    font-weight: 600
+}
+
+.doc-main {
+    max-width: none !important;
+}
+
+.doc-grid {
+    grid-template-columns: 1fr
+}
+
+.doc-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%
+}
+
+.doc-card h3 {
+    margin: 0;
+    font-size: .95rem
+}
+
+.doc-date {
+    color: var(--muted);
+    font-size: .78rem
+}
+
+.doc-desc {
+    color: var(--muted);
+    font-size: .85rem;
+    margin: 0
+}
+
+.doc-frame-wrap {
+    margin-top: 4px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+    height: 95vh;
+    max-height: 95vh
+}
+
+.doc-frame-wrap iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+    background: var(--bg)
+}
+}
