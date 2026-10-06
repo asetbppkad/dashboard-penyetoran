@@ -476,6 +476,25 @@ th {
     cursor: default
 }
 
+.filter-row th {
+    cursor: default;
+    padding: 6px 8px;
+    background: var(--card);
+    box-shadow: 0 1px 0 var(--border)
+}
+
+.filter-row input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 5px 8px;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    background: var(--bg);
+    color: var(--text);
+    font: inherit;
+    font-size: .78rem
+}
+
 .mini td {
     white-space: normal
 }
@@ -483,6 +502,17 @@ th {
 .r {
     text-align: right;
     font-variant-numeric: tabular-nums
+}
+
+#tDetailFoot td {
+    position: sticky;
+    bottom: 0;
+    background: var(--primary-soft);
+    border-top: 2px solid var(--primary);
+    border-bottom: 0;
+    font-weight: 700;
+    color: var(--primary);
+    white-space: nowrap
 }
 
 .dhead {
@@ -666,7 +696,7 @@ footer p {
 }
 
 .doc-main {
-    max-width: none !important;
+    max-width: none
 }
 
 .doc-grid {
@@ -712,5 +742,4 @@ footer p {
     border: 0;
     display: block;
     background: var(--bg)
-}
 }
