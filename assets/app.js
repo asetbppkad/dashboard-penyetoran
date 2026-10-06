@@ -44,6 +44,7 @@ const state = {
   months: [],
   dates: [],
   q: "",
+  colFilters: {},
   page: 1,
   sort: { key: "dateKey", dir: 1 },
   charts: {},
@@ -540,13 +541,32 @@ function renderDateChart(monthData) {
     },
   });
 }
+const esc = (s) =>
+  String(s).replace(
+    /[&<>"]/g,
+    (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])
+  );
+const cellText = (r, k) =>
+  k === "tanggal"
+    ? formatDateId(r.dateKey)
+    : k === "nominal"
+    ? formatCurrency(r.nominal)
+    : String(r[k] ?? "");
 function detailRows() {
   const { dateData } = scopes(),
     q = state.q.trim().toLowerCase(),
     { key, dir } = state.sort;
-  const rows = q
+  let rows = q
     ? dateData.filter((r) => r._search.includes(q))
     : dateData.slice();
+  const filters = Object.entries(state.colFilters).filter(([, v]) => v.trim());
+  if (filters.length) {
+    rows = rows.filter((r) =>
+      filters.every(([k, v]) =>
+        cellText(r, k).toLowerCase().includes(v.trim().toLowerCase())
+      )
+    );
+  }
   const num = key === "nominal" || key === "no";
   rows.sort(
     (a, b) =>
@@ -558,13 +578,42 @@ function detailRows() {
   );
   return rows;
 }
-function renderDetailTable() {
-  const has = state.dates.length > 0;
-  $("detailEmpty").hidden = has;
-  $("detailBox").hidden = !has;
-  $("btnCsv").disabled = !has;
-  $("q").disabled = !has;
-  if (!has) return;
+function buildDetailHead() {
+  const arrow = (k) =>
+    state.sort.key === (k === "tanggal" ? "dateKey" : k)
+      ? state.sort.dir > 0
+        ? " ▲"
+        : " ▼"
+      : "";
+  const head = $("tDetail").tHead;
+  head.innerHTML =
+    "<tr>" +
+    DETAIL_COLS.map(([k, l]) => `<th data-k="${k}">${l}${arrow(k)}</th>`).join(
+      ""
+    ) +
+    "</tr>" +
+    '<tr class="filter-row">' +
+    DETAIL_COLS.map(
+      ([k]) =>
+        `<th><input type="text" class="colf" data-k="${k}" placeholder="Filter…" value="${esc(
+          state.colFilters[k] || ""
+        )}"></th>`
+    ).join("") +
+    "</tr>";
+  // Baris filter menempel tepat di bawah baris header (dihitung dari tinggi aktualnya).
+  const h = head.rows[0].offsetHeight;
+  head.rows[1].querySelectorAll("th").forEach((th) => {
+    th.style.top = h + "px";
+  });
+}
+const NOMINAL_IDX = DETAIL_COLS.findIndex(([k]) => k === "nominal");
+function hasActiveFilter() {
+  return (
+    !!state.q.trim() ||
+    Object.values(state.colFilters).some((v) => v && v.trim())
+  );
+}
+function renderDetailBody() {
   const rows = detailRows(),
     pages = Math.max(1, Math.ceil(rows.length / CONFIG.PAGE_SIZE));
   state.page = Math.min(state.page, pages);
@@ -572,30 +621,12 @@ function renderDetailTable() {
     (state.page - 1) * CONFIG.PAGE_SIZE,
     state.page * CONFIG.PAGE_SIZE
   );
-  const arrow = (k) =>
-    state.sort.key === (k === "tanggal" ? "dateKey" : k)
-      ? state.sort.dir > 0
-        ? " ▲"
-        : " ▼"
-      : "";
-  $("tDetail").tHead.innerHTML =
-    "<tr>" +
-    DETAIL_COLS.map(([k, l]) => `<th data-k="${k}">${l}${arrow(k)}</th>`).join(
-      ""
-    ) +
-    "</tr>";
-  const esc = (s) =>
-    String(s).replace(
-      /[&<>"]/g,
-      (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])
-    );
   $("tDetail").tBodies[0].innerHTML = slice.length
     ? slice
         .map(
           (r) =>
             "<tr>" +
             DETAIL_COLS.map(([k]) => {
-              if (k === "tanggal") return `<td>${formatDateId(r.dateKey)}</td>`;
               if (k === "nominal")
                 return `<td class="r">${formatCurrency(r.nominal)}</td>`;
               return `<td class="${
@@ -608,17 +639,42 @@ function renderDetailTable() {
                 ].includes(k)
                   ? "wrap"
                   : ""
-              }">${esc(r[k])}</td>`;
+              }">${esc(cellText(r, k))}</td>`;
             }).join("") +
             "</tr>"
         )
         .join("")
-    : `<tr><td colspan="13" style="text-align:center;color:var(--muted)">Tidak ada data yang cocok dengan pencarian.</td></tr>`;
+    : `<tr><td colspan="13" style="text-align:center;color:var(--muted)">Tidak ada data yang cocok dengan filter.</td></tr>`;
   $(
     "pInfo"
   ).textContent = `${rows.length} baris · halaman ${state.page} dari ${pages}`;
   $("pPrev").disabled = state.page <= 1;
   $("pNext").disabled = state.page >= pages;
+
+  const foot = $("tDetailFoot"),
+    active = hasActiveFilter();
+  foot.hidden = !active;
+  if (active) {
+    const sum = rows.reduce((s, r) => s + r.nominal, 0);
+    const after = DETAIL_COLS.length - NOMINAL_IDX - 1;
+    foot.innerHTML = `<tr>
+      <td colspan="${NOMINAL_IDX}">Total nominal (${
+      rows.length
+    } baris sesuai filter)</td>
+      <td class="r">${formatCurrency(sum)}</td>
+      ${after > 0 ? `<td colspan="${after}"></td>` : ""}
+    </tr>`;
+  }
+}
+function renderDetailTable() {
+  const has = state.dates.length > 0;
+  $("detailEmpty").hidden = has;
+  $("detailBox").hidden = !has;
+  $("btnCsv").disabled = !has;
+  $("q").disabled = !has;
+  if (!has) return;
+  buildDetailHead();
+  renderDetailBody();
 }
 function renderAll() {
   const { monthData, dateData } = scopes();
@@ -637,6 +693,7 @@ function resetFilter() {
   state.months = [];
   state.dates = [];
   state.q = "";
+  state.colFilters = {};
   state.page = 1;
   $("q").value = "";
   msMonth.clear();
@@ -757,11 +814,25 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 200);
   });
   $("tDetail").addEventListener("click", (e) => {
+    if (e.target.closest(".filter-row") || e.target.classList.contains("colf"))
+      return;
     const k = e.target.closest("th")?.dataset.k;
     if (!k) return;
     const key = k === "tanggal" ? "dateKey" : k;
     state.sort = { key, dir: state.sort.key === key ? -state.sort.dir : 1 };
     renderDetailTable();
+  });
+  let colfTimer;
+  $("tDetail").addEventListener("input", (e) => {
+    if (!e.target.classList.contains("colf")) return;
+    const k = e.target.dataset.k,
+      v = e.target.value;
+    clearTimeout(colfTimer);
+    colfTimer = setTimeout(() => {
+      state.colFilters[k] = v;
+      state.page = 1;
+      renderDetailBody();
+    }, 150);
   });
   $("pPrev").onclick = () => {
     state.page--;
