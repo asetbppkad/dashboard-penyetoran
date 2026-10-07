@@ -2,7 +2,7 @@
 /* ===== KONFIGURASI ===== */
 const CONFIG = {
   API_URL:
-    "https://script.google.com/macros/s/AKfycbyQoKqvYlyuKjU_7rbK5yclRikJzwBnrhwtq6cjGQmYuMoh6gg5E4StnedwOpqesqxi/exec",
+    "https://script.google.com/macros/s/AKfycbyX_KMqbOarGu1F4CTYXu-RFLfevMlHVHYk0AKIxeO2a9QYJQgTC8cKrx1qY24WsuPR/exec",
   CACHE_KEY: "dashboardData",
   CACHE_MS: 5 * 60 * 1000,
   PAGE_SIZE: 15,
