@@ -1,8 +1,10 @@
 "use strict";
 /* ===== KONFIGURASI ===== */
 const CONFIG = {
+  // API_URL:
+  //   "https://script.google.com/macros/s/AKfycbyQoKqvYlyuKjU_7rbK5yclRikJzwBnrhwtq6cjGQmYuMoh6gg5E4StnedwOpqesqxi/exec",
   API_URL:
-    "https://script.google.com/macros/s/AKfycbyQoKqvYlyuKjU_7rbK5yclRikJzwBnrhwtq6cjGQmYuMoh6gg5E4StnedwOpqesqxi/exec",
+    "https://script.google.com/macros/s/AKfycby7oGd9ptPFdailnIjSS7V40Fgs8vQLIiODz3vzj338xUWkSiNlcgE7d67pAdcgIip9/exec",
   CACHE_KEY: "dashboardData",
   CACHE_MS: 5 * 60 * 1000,
   PAGE_SIZE: 15,
